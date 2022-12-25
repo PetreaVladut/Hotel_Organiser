@@ -9,6 +9,8 @@ public class Reservation{
     public int get_costs(){return costs;}
     public int get_idRoom(){return idRoom;}
     public int get_idPers(){return idPers;}
+    public void set_idPers(int n){idPers=n;}
+
     public Reservation(Connection con,int i) {
 /*        idRes=i;
         String data=null;
@@ -29,6 +31,7 @@ public class Reservation{
     public Reservation(String camera,int costuri,String in,String out,int d,int i)
     {
         //generate idRes(alta bataie de cap)
+        idRoom=Integer.parseInt(camera);
         idRes=i;
         //generate or find out personal id o bataie de cap si mai mare sa ma fut
         idPers=d;

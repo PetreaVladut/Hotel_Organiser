@@ -42,18 +42,17 @@ public class Entry {
             throw new RuntimeException(e);
         }
     }
-    public void createClient(Client p){
-        String data;
-        data = "select * from tester.client where idPers="+ p.get_idClient() +";";
+    public int existClient(Client p){
+        String data=null;
+        data = String.format("select * from tester.client where nume='%s' and prenume='%s' and telefon='%s'",p.get_nume(),p.get_prenume(),p.get_telefon());
         System.out.println(data);
         Statement stmt = null;
         try {
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery(data);
-            rs.next();
-            p.set_nume(rs.getString("nume"));
-            p.set_prenume(rs.getString("prenume"));
-            p.set_telefon(rs.getString("telefon"));
+            if(rs.next())
+            return rs.getInt("idPers");
+            else return 0;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

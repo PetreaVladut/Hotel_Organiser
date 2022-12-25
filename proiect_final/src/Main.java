@@ -85,3 +85,18 @@ public class Main {
 //insert customer data in DB
 //insert reservation in DB
 //and done the hardest part
+//calendar showing when selecting date
+//id numbers generate and check
+
+//fail safe mechanisms(please enter a valid date shit)
+//return button for menus
+//better data transmission
+//priority system(decision module)
+//high prio client(allows moving around other reservations)- checkbox(thought about using a repainting button)
+//already checked-in clients=> new menu for the reservations of the day
+//statistics to be generated - client has to be able to consult some statistic regarding customers, rooms, prices, time periods
+//add images(as design elements) to the frame in order for it to look good
+//insert a home button
+//search menu(filtering data by name, id, date, etc)- this will then permit deletion or modification of entry
+//mouse recognition
+

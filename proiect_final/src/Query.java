@@ -34,8 +34,7 @@ public class Query {
             throw new RuntimeException(e);
         }
     }
-    public Query()
-    {
+    public Query() {
         try {
             // Class.forName("org.postgresql.Driver");
             //Class.forName("com.mysql.jdbc.Driver");
