@@ -43,7 +43,8 @@ public class Client {
         Random ceva= new Random();
         int i=e.existClient(this);
         if(i==0)
-            i= (int) (ceva.nextLong() & 0xffffffffL);
+            i= ceva.nextInt(0,2147483647);
+        System.out.println(i);
         return i;
     }
     public Client(Connection con,int i) {

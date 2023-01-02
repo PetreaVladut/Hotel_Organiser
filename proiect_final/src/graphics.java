@@ -10,6 +10,10 @@ import org.jdatepicker.JDatePicker;
 import org.jdatepicker.SqlDateModel;
 import org.jdatepicker.UtilCalendarModel;
 
+import org.jfree.chart.*;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
+
 public class graphics {
    // private static final long serialVersionUID = 1L;
     //a subclass for every menu
@@ -45,6 +49,44 @@ public class graphics {
         f.setLayout(null);
         f.setVisible(true);
     }
+    private DefaultCategoryDataset createDataset( ) {
+        Query q=new Query();
+        ArrayList<Integer> aux=new ArrayList<>();
+        q.occupationbymonth(1,aux);
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
+        for(int i=0;i<30;i++)
+        dataset.addValue( aux.get(i) , "rooms" , String.valueOf(i) );
+        return dataset;
+    }
+    void menu8()
+    {
+        clear();
+        JFreeChart lineChart = ChartFactory.createLineChart(
+                "ceva",
+                "rooms","days",
+                createDataset(),
+                PlotOrientation.VERTICAL,
+                true,true,false);
+        ChartPanel chartPanel = new ChartPanel(lineChart);
+        chartPanel.setBounds( 10,10,600,400 );
+        panel.add(chartPanel);
+        update();
+    }
+    void menu9()
+    {
+        clear();
+        buton1=new JButton("Grad ocupare luna curenta");
+        buton1.setBounds(x / 2-50, y / 2+10, 100, 30);
+        buton1.addActionListener(
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        menu8();
+                    }
+                }
+        );
+        panel.add(buton1);
+        update();
+    }
     void menu7()
     {
         clear();
@@ -66,15 +108,15 @@ public class graphics {
                         labele[0] = new JLabel("Nume");
                         labele[0].setBounds(20, 80, 150, 30);
                         texte[0]=new JTextField("");
-                        texte[0].setBounds(20,120,200,20);
+                        texte[0].setBounds(20,120,150,20);
                         labele[1] = new JLabel("Telefon");
                         labele[1].setBounds(180, 80, 150, 30);
                         texte[1]=new JTextField("");
-                        texte[1].setBounds(180,120,200,20);
+                        texte[1].setBounds(180,120,150,20);
                         labele[2] = new JLabel("IdClient");
                         labele[2].setBounds(340, 80, 150, 30);
                         texte[2]=new JTextField("");
-                        texte[2].setBounds(340,120,200,20);
+                        texte[2].setBounds(340,120,150,20);
                         for(int i=0;i<3;i++)
                         {
                             panel.add(labele[i]);
@@ -98,15 +140,15 @@ public class graphics {
                         labele[0] = new JLabel("Data");
                         labele[0].setBounds(20, 80, 150, 30);
                         texte[0]=new JTextField("");
-                        texte[0].setBounds(20,120,200,20);
+                        texte[0].setBounds(20,120,150,20);
                         labele[1] = new JLabel("Camera");
                         labele[1].setBounds(180, 80, 150, 30);
                         texte[1]=new JTextField("");
-                        texte[1].setBounds(180,120,200,20);
+                        texte[1].setBounds(180,120,150,20);
                         labele[2] = new JLabel("IdRezervare");
                         labele[2].setBounds(340, 80, 150, 30);
                         texte[2]=new JTextField("");
-                        texte[2].setBounds(340,120,200,20);
+                        texte[2].setBounds(340,120,150,20);
                         for(int i=0;i<3;i++)
                         {
                             panel.add(labele[i]);
@@ -116,12 +158,75 @@ public class graphics {
                     }
                 }
         );
+        ArrayList<Reservation> aux1=new ArrayList();
+        ArrayList<Client> aux2=new ArrayList();
+        ArrayList<JButton> butoane=new ArrayList<>();
+        Query q=new Query();
+        buton2=new JButton("Delete");
+        buton2.setBounds(3*x/4,80,100,30);
+        buton2.addActionListener(
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        ArrayList<Reservation> removable=new ArrayList();
+                        for(int i=0;i<aux1.size();i++) {
+                        if(butoane.get(i).getBackground()==Color.PINK)
+                            removable.add(aux1.get(i));
+                        }
+                        q.deletereservations(removable);
+                    }
+                }
+        );
         buton1=new JButton("Cautare->");
         buton1.setBounds(3*x/4,40,100,30);
         buton1.addActionListener(
                 new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-
+                        if(radio1.isSelected()) {
+                            q.clientquery(aux1, aux2, texte[0].getText(), texte[1].getText(),texte[2].getText());
+                            for(int i=0;i<aux1.size();i++)
+                            {
+                                buton4=new JButton(String.format("%s to %s, room:%d, costs:%d",aux1.get(i).get_in(),aux1.get(i).get_out(),aux1.get(i).get_idRoom(),aux1.get(i).get_costs()));
+                                buton4.setBounds(20,i*30+160,300,30);
+                                buton4.setBackground(Color.GRAY);
+                                int finalI = i;
+                                butoane.add(buton4);
+                                butoane.get(i).addActionListener(
+                                        new ActionListener() {
+                                            public void actionPerformed(ActionEvent e) {
+                                            if(butoane.get(finalI).getBackground()==Color.GRAY)
+                                                butoane.get(finalI).setBackground(Color.PINK);
+                                            else
+                                                butoane.get(finalI).setBackground(Color.GRAY);
+                                            }
+                                        }
+                                );
+                                buton4.addMouseListener(new MouseListener() {
+                                    @Override
+                                    public void mouseClicked(MouseEvent e) {
+                                    }
+                                    @Override
+                                    public void mousePressed(MouseEvent e) {
+                                    }
+                                    @Override
+                                    public void mouseReleased(MouseEvent e) {
+                                    }
+                                    @Override
+                                    public void mouseEntered(MouseEvent e) {
+                                        buton3=new JButton(String.format("Client:%s %s, telefon:%s, id:%d",aux2.get(finalI).get_nume(),aux2.get(finalI).get_prenume(),aux2.get(finalI).get_telefon(),aux2.get(finalI).get_idClient()));
+                                        buton3.setBounds(330,finalI*30+160,350,30);
+                                        panel.add(buton3);
+                                        update();
+                                    }
+                                    @Override
+                                    public void mouseExited(MouseEvent e) {
+                                        panel.remove(buton3);
+                                        update();
+                                    }
+                                });
+                                panel.add(butoane.get(i));
+                            }
+                            update();
+                        }
                     }
                 }
         );
@@ -137,7 +242,7 @@ public class graphics {
     void menu6(Reservation r)
     {
         clear();
-        label1=new JLabel(String.format("Rezervarea cu nr:%d inregistrata cu success"),r.get_idRes());
+        label1=new JLabel(String.format("Rezervarea cu nr:%d inregistrata cu success",r.get_idRes()));
         label1.setBounds(x/2-50,y/2,300,20);
         panel.add(label1);
         update();
@@ -185,7 +290,7 @@ public class graphics {
 
                 @Override
                 public void mouseEntered(MouseEvent e) {
-                    buton1 = new JButton("ceva");
+                    buton1 = new JButton(String.format("Room number:%d",aux1.get(finalI)));
                     buton1.setBounds(320, finalI * y / 20 + 30, 300, 20);
                     panel.add(buton1);
                     update();
@@ -281,11 +386,11 @@ public class graphics {
                         p.set_prenume(text2.getText());
                         p.set_telefon(text3.getText());
                         p.set_idPers(p.generate_idClient());
-                        d.set_idPers(p.get_idClient());
                         Entry c=new Entry();
-                        if(p.generate_idClient()==0) {
+                        if(p.get_idClient()==0) {
                             c.insertClient(p);
                         }
+                        d.set_idPers(p.get_idClient());
                         c.insertReservation(d);
                         menu6(d);
                     }
@@ -365,7 +470,7 @@ public class graphics {
         buton2.addActionListener(
                 new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        menu2();
+                        menu9();
                     }
                 }
         );
